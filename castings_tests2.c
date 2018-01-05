@@ -36,9 +36,14 @@ void main()
 	unsigned uc;
 	int ic;
 		
+//	use the escape sequence inside the string literal
+//	to test any byte value
+//	'\xNN' is the hexadecimal  escape sequence; '\NNN' is the octal one
+//	neither of which is very easy to read!!!
 	c = '\xaa';
 	ic = (int)c;
 	uc = (unsigned char)c;
+	printf("the tested value, as a char, is: %d \n", ic);
 	print_k_hex((void *)&uc, 1);
 	print_k_hex((void *)&ic, 4);
 	print_k_hex((void *)&c, 1);
