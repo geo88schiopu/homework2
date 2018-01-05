@@ -40,6 +40,7 @@ void main()
 //	to test any byte value
 //	'\xNN' is the hexadecimal  escape sequence; '\NNN' is the octal one
 //	neither of which is very easy to read!!!
+//	but what does the negative values of char do?
 	c = '\xaa';
 	ic = (int)c;
 	uc = (unsigned char)c;
