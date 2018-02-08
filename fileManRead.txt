@@ -1,0 +1,8 @@
+Objects that are not capable of seeking always read from the current
+position.  The value of the pointer associated with such an object is
+undefined.
+Upon successful completion, rreeaadd(), rreeaaddvv(), and pprreeaadd() return the num-
+ber of bytes actually read and placed in the buffer.  The system guaran-
+tees to read the number of bytes requested if the descriptor references a
+normal file that has that many bytes left before the end-of-file, but in
+no other case.
