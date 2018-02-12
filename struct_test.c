@@ -3,21 +3,32 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 4096
 
-typedef struct	s_gnl
+typedef struct		s_list
 {
-	char		*buf;
-	int		count;
-	int		i;
-	int		nl;
-	int		fd;
-}				t_gnl;
-
-int				get_next_line(int const fd, char **line);
+	void							*content;
+	size_t						content_size;
+	struct s_list			*next;
+}		t_list;
 
 
+
+void	ft_lstiter(t_list *lst, void (*f)(t_list *elem))
+{
+	f(lst); //base called first;
+	if(lst->next)
+	{
+		ft_lstiter(lst->next);
+	}
+}
+
+//this is just a simple lstiter
+void ft_print_list(*lst)
+{
+	printf(lst);
+	if(lst->next)
+		printf(lst->next);	
+}
 
 
 

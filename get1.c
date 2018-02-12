@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define BUFF_SIZE 1000
+#define BUFF_SIZE 20
 
 typedef struct		s_list
 {
@@ -34,16 +34,24 @@ t_list			*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
  int get_next_line(int const fd, char ** line);
 */
 
+
+//this is the type of programming I want to do - good data structures
+//where to store enough state - and use this state for data extraction
+//this is what I do - data extraction from a character vector (R vocab)
+//the reads are in a sequence - ok ... everytime you start
+
+//ok, I added a next ... so now the structs can function as nodes in a list
 typedef struct s_newstr
 {
 	char	*chardata;
 	int 	start;
-	int		end;
+	int	end;
 	int 	fd;
+	int	posnewline;
+	t_newstr *next;
 }	t_newstr;
 
-//
-
+//nothing special here, simply fill out with default values (and 0s)
 t_newstr		*new_struct_newstr()
 {
 	t_newstr	*newstr;
@@ -51,52 +59,75 @@ t_newstr		*new_struct_newstr()
 	newstr = (t_newstr *)malloc(sizeof(t_newstr));
 	newstr->chardata = (char*)malloc(sizeof(char) * BUFF_SIZE);
 	newstr->start = 0;
-	newstr->end = BUFF_SIZE;
+	newstr->end = BUFF_SIZE - 1;
 	fd = -1;
+	posnewline = -1;
+	next = NULL;
 	return (newstr);
 }
 
+void 			*del_struct_newstr(t_newstr *newstr)
+{
+		if (newstr)
+		{
+			free(newstr->chardata);
+			free(newstr);
+		}
+}
 
+//push them out into a list all read buffs?
+//simply add the newest one at the beginning of the list?
+
+
+//so I get back a char pointer - it should be either NULL or return a
+//line ...
+//I should simply count - how many chars did I read without finding a newline?
+//where did I find the newline - so
+
+//I get a list of newstrs, I know only the last one (the first in the list)
+//has a newline - do I count the list first? do I check to see where it is?
+//get rid of all the following list elements
 char 			*export_line(t_newstr *head, int line_length)
 {
 
-
-
-
 }
-
-
-
-
 
 
 //fd is a constant, don't mess with it!!
 int get_next_line(int const fd, char **line)
 {
 	//char *readline;
-	t_newstr	*newstr;
-	int 	read_end;
-	int		found_newline;
-	int		line_length;
-	int		i;
+	//ok, so the pointer is static ... and its memory is malloc-ed
+	//so it should work well as storage across function calls - global
+	static t_newstr	*newstr;
+	int 					read_end;
+	int					found_newline;
+	int					line_length;
+	int					i;
 
 	line_length = 0;
 	found_newline = 0;
-	//if (!readline)
-	//	return(-1);
 
+	//first I should check whether I already have a newstr structure
+	if (newstr)
+	{
+
+	}
+//well, inside the read loop I easily compute the length of the line
+//I can malloc-it and fillit up ... well, I could call the export_line
+//just in order to reduce the number of lines of this function;
+//and here I should
 	while (found_newline == 0)
 	{
 		newstr = new_struct_newstr();
 		read_end = read(fd, newstr->chardata, BUFF_SIZE);
-		
+		//				found_newline = 1;
+		//				line_length = line_length + i;
 		while (i < read_end)
 		{
 			if (readline[i] == '\n')
 			{
-				found_newline = 1;
-				line_length = line_length + i;
-				return (export_line(  , line_length));
+
 			}
 		}
 	}

@@ -131,6 +131,8 @@ void	ft_lstdelone(t_list **alst, void (*del)(void *, size_t))
 //this is nice, how do you iterate over a list?
 //of course, you don't have an iterator :)))
 //you are almost forced to act recursively
+//this is a single-linked list, you must start with the
+//first element - this is why you always point to it!!!
 void	ft_lstiter(t_list *lst, void (*f)(t_list *elem))
 {
 	if (!lst || !f)

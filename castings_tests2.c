@@ -1,12 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void print_k_hex(void *pp,int k)
+//it simply takes a pointer to a memory space
+//and prints k bytes from it! 
+void print_k_hex(void *pp, int k)
 {
 	char *symbols;
 	unsigned char *uc;
-	int i;	
-	
+	int i;
+
 	i = 0;
 	symbols = "0123456789abcdef";
 	while (i < k)
@@ -35,7 +37,7 @@ void main()
 	char c;
 	unsigned uc;
 	int ic;
-		
+
 	c = '\xaa';
 	ic = (int)c;
 	uc = (unsigned char)c;
@@ -46,4 +48,3 @@ void main()
 	printf("as char: %o \n", c);
 	return ;
 }
-
