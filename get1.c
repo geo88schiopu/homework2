@@ -28,8 +28,26 @@ typedef struct s_newstr
 	int	end;
 	int 	fd;
 	int	posnewline;
-	t_newstr *next;
+	struct s_newstr *next;
 }	t_newstr;
+
+void		*ft_memcpy(void *dst, const void *src, size_t n)
+{
+	size_t			i;
+	unsigned char	*newdst;
+	unsigned char	*newsrc;
+
+	i = 0;
+	newdst = (unsigned char *)dst;
+	newsrc = (unsigned char *)src;
+	while (i < n)
+	{
+		newdst[i] = newsrc[i];
+		i++;
+	}
+	return (dst);
+}
+
 
 //nothing special here, simply fill out with default values (and 0s)
 t_newstr		*new_struct_newstr()
@@ -40,9 +58,9 @@ t_newstr		*new_struct_newstr()
 	newstr->chardata = (char*)malloc(sizeof(char) * BUFF_SIZE);
 	newstr->start = 0;
 	newstr->end = BUFF_SIZE - 1;
-	fd = -1;
-	posnewline = -1;
-	next = NULL;
+	newstr->fd = -1;
+	newstr->posnewline = -1;
+	newstr->next = NULL;
 	return (newstr);
 }
 
@@ -54,6 +72,7 @@ void 			*del_struct_newstr(t_newstr *newstr)
 			free(newstr->chardata);
 			free(newstr);
 		}
+		return;
 }
 
 void	ft_lstadd_ppp(t_list **newnode, t_list *new)
@@ -78,6 +97,7 @@ static char 			*export_line(t_newstr **last, int line_length)
 	t_newstr 	*newstr_old;
 	void 			*dst;
 	void 			*src;
+	int 			size;
 	int 			written;
 	int				keepgoing;
 
@@ -87,8 +107,8 @@ static char 			*export_line(t_newstr **last, int line_length)
 	while(newstr->next)
 	{
 		size = (size_t)(newstr->end - newstr->start);
-		dst = (void *)(line + written);
-		src = (void *)(newstr->chardata + start);
+		dst = (void *)(line + (line_length - size - written));
+		src = (void *)(newstr->chardata + newstr->start);
 		ft_memcpy(dst, src, size);
 		if (newstr->next)
 		{
@@ -97,11 +117,11 @@ static char 			*export_line(t_newstr **last, int line_length)
 			newstr = newstr->next;
 			del_struct_newstr(newstr_old);
 		}
-		else
-		{
-
-		}
+		//else
+		//{
+		//}
 	}
+	return(line);
 }
 
 //be careful with 0 chardata ... because you'll try to read from a NULL pointer
@@ -111,8 +131,8 @@ static int				check_new_line_pos(t_newstr	*newstr)
 	int 	i;
 
 	i = newstr->start;
-	while (i >= newstr->start && i =< newstr->end)
-		if (chardata[i] == '\n')
+	while (i >= newstr->start && i <= newstr->end)
+		if (newstr->chardata[i] == '\n')
 				return(i);
 	return (-1);
 }
@@ -135,7 +155,7 @@ int 		get_next_line(int const fd, char **line)
 	{
 		found_newline = check_new_line_pos(newstr);
 		if (found_newline > 0)
-			return(export_line(&newstr, (found_newline - start)));
+			return(export_line(&newstr, (found_newline - newstr->start)));
 		else
 			line_length = newstr->end - newstr->start;
 	}
@@ -148,7 +168,7 @@ int 		get_next_line(int const fd, char **line)
 		newstr = newstr2;
 		if (found_newline >= 0)
 		{
-				export_line(&newstr, newline);
+				export_line(&newstr, line_length);
 		}
 	}
 }
@@ -162,11 +182,12 @@ return(0);
 int		main()
 {
 	int			fd;
-	char 		**p_line;
+	char 		*p_line;
 
 
 	fd = open("fileManRead.txt", O_RDONLY);
-	get_next_line(fd, p_line);
+	get_next_line(fd, &p_line);
+	printf("read: %s\n", p_line);
 	close(fd);
 
 	//printf("read line %s\n", *p_line);
